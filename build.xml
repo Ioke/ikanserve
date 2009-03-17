@@ -8,12 +8,6 @@
   <property file="build.properties"/>
   <property file="default.build.properties"/>
 
-  <taskdef resource="tasks.properties">
-    <classpath>
-      <fileset dir="${lib.dir}" includes="*.jar"/>
-    </classpath>
-  </taskdef>
-
   <path id="build.classpath">
     <fileset dir="${lib.dir}" includes="*.jar"/>
   </path>
@@ -35,7 +29,7 @@
     </copy>
 
     <copy todir="${classes.dir}">
-      <fileset dir="src" includes="ioke/**/*.ik"/>
+      <fileset dir="src/ioke" includes="**/*.ik"/>
     </copy>
   </target>
 
@@ -47,6 +41,12 @@
         <include name="**/*.properties"/>
       </fileset>
     </jar>
+  </target>
+
+  <target name="example-app" depends="jar" description="Create the ikanserve.war file in the jetty/webapps directory">
+    <war destfile="jetty/webapps/ikanserve.war" webxml="web/WEB-INF/web.xml">
+      <lib dir="${lib.dir}" includes="ikanserve.jar,ioke.jar"/>
+    </war>
   </target>
 
   <target name="clean" description="clean almost everything">
