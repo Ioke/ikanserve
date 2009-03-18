@@ -44,8 +44,9 @@
   </target>
 
   <target name="example-app" depends="jar" description="Create the ikanserve.war file in the jetty/webapps directory">
-    <war destfile="jetty/webapps/ikanserve.war" webxml="web/WEB-INF/web.xml">
+    <war destfile="jetty/webapps/root.war" webxml="web/WEB-INF/web.xml">
       <lib dir="${lib.dir}" includes="ikanserve.jar,ioke.jar"/>
+      <classes dir="web/WEB-INF/classes" includes="**/*"/>
     </war>
   </target>
 
