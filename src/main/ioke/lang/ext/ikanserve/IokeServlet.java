@@ -20,41 +20,36 @@ import ioke.lang.exceptions.ControlFlow;
  * @author <a href="mailto:ola.bini@gmail.com">Ola Bini</a>
  */
 public class IokeServlet extends HttpServlet {
-    private Runtime r;
     private ServletContext sc;
 
     @Override
     public void init() {
         sc = getServletConfig().getServletContext();
-        try {
-            System.err.println("*** IKanServe: creating runtime...");
-            
-            r = new Runtime();
-            r.init();
-            r.evaluateString("use(\"ikanserve.ik\")", r.message, r.ground);
-            Object server = r.evaluateString("IKanServe", r.message, r.ground);
-            IokeObject.setCell(server, null, null, "servletConfig", r.registry.wrap(getServletConfig()));
-            IokeObject.setCell(server, null, null, "servletContext", r.registry.wrap(sc));
+    }
 
-            System.err.println("*** IKanServe: runtime ready...");
-        } catch(Exception e) {
-            sc.log("error while loading application", e);
-        } catch(ControlFlow cf) {
-            sc.log("controlflow while loading application: " + cf);
-        }
+    private IokeApplicationFactory getIokeFactory() {
+        return (IokeApplicationFactory)sc.getAttribute(IokeServletContextListener.FACTORY_KEY);
     }
 
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) 
         throws ServletException, IOException {
 
+        final IokeApplicationFactory factory = getIokeFactory();
+        IokeApplication app = null;
         try {
+            app = factory.getApplication();
+            Runtime r = app.getRuntime();
             Object server = r.evaluateString("IKanServe mimic", r.message, r.ground);
             IokeObject.setCell(server, null, null, "request", r.registry.wrap(request));
             IokeObject.setCell(server, null, null, "response", r.registry.wrap(response));
             r.newMessage("dispatch").sendTo(r.ground, server);
         } catch(ControlFlow cf) {
             sc.log("controlflow while dispatching application: " + cf);
+        } finally {
+            if (app != null) {
+                factory.finishedWithApplication(app);
+            }
         }
     }
 }// iokeservlet
