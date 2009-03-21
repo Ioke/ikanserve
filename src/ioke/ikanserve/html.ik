@@ -2,7 +2,8 @@
 use("blank_slate")
 IKanServe HtmlBuilder = BlankSlate create(fn(bs,
     bs pass = method(+args, +:attrs,
-      currentMessage "<%s%:[ %s=\"%s\"%]>%[%s%]</%s>\n" format(currentMessage name, attrs, args, currentMessage name))))
+      args "<%s%:[ %s=\"%s\"%]>%[%s%]</%s>\n" format(
+        currentMessage name, attrs, args, currentMessage name))))
 
 
 
@@ -21,3 +22,4 @@ let(test1, method(
     ),
 ;  test1 println
 )
+
