@@ -16,6 +16,7 @@
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${classes.dir}"/>
     <mkdir dir="jetty/webapps"/>
+    <mkdir dir="jetty/logs"/>
   </target>
 
   <target name="compile" depends="prepare" description="Compile the source files for the project.">
