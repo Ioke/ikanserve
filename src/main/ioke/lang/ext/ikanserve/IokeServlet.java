@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ioke.lang.Message;
 import ioke.lang.Runtime;
 import ioke.lang.IokeObject;
 import ioke.lang.exceptions.ControlFlow;
@@ -43,7 +44,8 @@ public class IokeServlet extends HttpServlet {
             Object server = r.evaluateString("IKanServe mimic", r.message, r.ground);
             IokeObject.setCell(server, null, null, "request", r.registry.wrap(request));
             IokeObject.setCell(server, null, null, "response", r.registry.wrap(response));
-            r.newMessage("dispatch").sendTo(r.ground, server);
+            IokeObject msg = r.newMessage("dispatch");
+            ((Message)IokeObject.data(msg)).sendTo(msg, r.ground, server);
         } catch(ControlFlow cf) {
             sc.log("controlflow while dispatching application: " + cf);
         } finally {
