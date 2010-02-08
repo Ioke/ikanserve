@@ -3,8 +3,7 @@
 
 IKanServe actionForPath(#r[^/foo], method("hello world!!"))
 IKanServe actionForPath(#r[^/bar], method("you requested this: #{request pathInfo}"))
-
-
+IKanServe actionForPath(#r[^/more], method(request inspect))
 
 
 IKanServe actionForPath(#r[^/xxx], method(
